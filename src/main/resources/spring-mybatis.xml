@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--
+        引入jdbc文件配置
+    -->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+
+    <!-- 扫描仪 -->
+    <context:component-scan base-package="com.myuni.wyglsys.controller"/>
+    <context:component-scan base-package="com.myuni.wyglsys.service"/>
+
+    <!--
+        配置druid连接池参数
+    -->
+    <bean id="ds" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbcDriver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${user}"/>
+        <property name="password" value="${password}"/>
+    </bean>
+
+    <!--
+        SqlSessionFactoryBean，将mybatis交给spring来统一管理
+    -->
+    <bean id="sf" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--
+            指定mybatis的配置文件位置:可能有多的Mybatis配置。
+         -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+
+        <!-- 配置连接池对象 -->
+        <property name="dataSource" ref="ds"/>
+
+        <!-- 配置pojo类别名 -->
+        <!--
+            单独类的别名设置:设置了别名之后，前面部分的路径可以省略，只写小写类名
+            <property name="typeAliases" value="com.qfedu.ssm.pojo.Product"/>
+        -->
+        <!-- 设置别名包：此包下的所有类都能使用小写别名 -->
+        <property name="typeAliasesPackage" value="com.myuni.wyglsys.entity"/>
+
+        <!-- 配置mybatis映射器的位置 -->
+        <property name="mapperLocations" value="classpath:com/myuni/wyglsys/dao/mappers/*Mapper.xml"/>
+    </bean>
+
+    <!--
+        配置映射扫描配置,分别扫描dao层和指定SqlSessionFactory对象
+    -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.myuni.wyglsys.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sf"/>
+    </bean>
+
+    <!-- 事务管理器 -->
+    <bean id="dtx" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="ds"/>
+    </bean>
+
+    <!--
+        声明事务的实现方式，指定事务的隔离级别以及出错之后的回调
+    -->
+    <tx:advice transaction-manager="dtx" id="tx">
+        <tx:attributes>
+            <tx:method name="add*" isolation="DEFAULT" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="del*" isolation="DEFAULT" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="upd*" isolation="DEFAULT" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="insert*" isolation="DEFAULT" propagation="REQUIRED" rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="pt" expression="execution(* com.myuni.wyglsys.service.*.*(..))"/>
+        <aop:advisor advice-ref="tx" pointcut-ref="pt"/>
+    </aop:config>
+
+</beans>

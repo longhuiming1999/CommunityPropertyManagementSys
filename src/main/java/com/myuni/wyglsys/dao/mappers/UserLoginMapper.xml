@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myuni.wyglsys.dao.IUserLoginDao">
+
+    <sql id="selectAll">
+        select id,account,pwd,phone,email from tb_userLogin
+    </sql>
+
+    <select id="findByIndex" resultType="com.myuni.wyglsys.entity.UserLogin">
+        <include refid="selectAll"/>
+        <where>
+            <if test="account != null">
+                account like '%${account}%'
+            </if>
+            <if test="phone != null">
+                and phone like '%${phone}%'
+            </if>
+            <if test="email != null">
+                and email like '%${email}%'
+            </if>
+        </where>
+        <if test="currentPage != null &amp;&amp; pageSize != null">
+            limit #{currentPage},#{pageSize}
+        </if>
+    </select>
+</mapper>

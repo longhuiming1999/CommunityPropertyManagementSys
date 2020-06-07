@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myuni.wyglsys.dao.IServiceDao">
+
+    <sql id="selectAll">
+        select id,type,content,cost,date,state from tb_service
+    </sql>
+    <select id="findServiceByIndex" resultType="com.myuni.wyglsys.entity.Service">
+        <include refid="selectAll"/>
+        <where>
+            <if test="type != null">
+                type = #{type}
+            </if>
+            <if test="content != null">
+                and content like '%${content}%'
+            </if>
+            <if test="startMoney != null">
+                and cost > #{startMoney}
+            </if>
+            <if test="endMoney != null">
+                and cost &lt;= #{endMoney}
+            </if>
+            <if test="startDate != null">
+                and date > #{startDate}
+            </if>
+            <if test="endDate != null">
+                and date &lt; #{endDate}
+            </if>
+        </where>
+        <if test="currentPage != null &amp;&amp; pageSize != null">
+            limit #{currentPage},#{pageSize}
+        </if>
+    </select>
+</mapper>

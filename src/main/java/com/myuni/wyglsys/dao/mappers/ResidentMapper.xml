@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myuni.wyglsys.dao.IResidentDao">
+
+    <sql id="selectAll">
+       select id,name,age,sex,phone,checkindate,remark from tb_resident
+    </sql>
+    <select id="findResidentsByIndex" resultType="com.myuni.wyglsys.entity.Resident">
+        <include refid="selectAll"/>
+        <where>
+            <if test="name != null">
+                name like '%${name}%'
+            </if>
+            <if test="startAge != null">
+                and age >= #{startAge}
+            </if>
+            <if test="endAge != null">
+                and age &lt;= #{endAge}
+            </if>
+            <if test="sex != null">
+                and sex = #{sex}
+            </if>
+            <if test="phone != null">
+                and phone like '%${phone}%'
+            </if>
+            <if test="startDate != null">
+                and checkindate >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                and checkindate &lt;= #{endDate}
+            </if>
+        </where>
+        <if test="currentPage != null">
+            <if test="pageSize != null">
+                limit #{currentPage},#{pageSize}
+            </if>
+        </if>
+
+    </select>
+</mapper>

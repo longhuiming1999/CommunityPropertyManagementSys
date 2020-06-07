@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myuni.wyglsys.dao.IHouseDao">
+
+    <sql id="selectAll">
+        select id,buildnum,unit,floor,housenum,resid,name,phone from tb_house
+    </sql>
+    <select id="findHouseByIndex" resultType="com.myuni.wyglsys.entity.House">
+        <include refid="selectAll"/>
+        <where>
+            <if test="buildNum != null">
+                buildnum = #{buildNum}
+            </if>
+            <if test="unit != null">
+                and unit = #{unit}
+            </if>
+            <if test="floor != null">
+                and floor = #{floor}
+            </if>
+            <if test="houseNum != null">
+                and houseNum = #{houseNum}
+            </if>
+            <if test="name != null">
+                and name like '%${name}%'
+            </if>
+            <if test="phone != null">
+                and phone like '%${phone}%'
+            </if>
+        </where>
+        <if test="currentPage != null &amp;&amp; pageSize != null">
+            limit #{currentPage},#{pageSize}
+        </if>
+    </select>
+</mapper>

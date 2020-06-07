@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myuni.wyglsys.dao.ICarportDao">
+
+    <sql id="selectAll">
+        select id,resid,resname,resPlateNum,sellMoney,isrent from tb_carport
+    </sql>
+
+    <select id="findCarportByIndex" resultType="com.myuni.wyglsys.entity.CarPort">
+        <include refid="selectAll"/>
+        <where>
+            <if test="resName != null">
+                resname like '%${resName}%'
+            </if>
+            <if test="resPlateNum != null">
+                and resPlateNum like '%${resPlateNum}%'
+            </if>
+            <if test="startMoney != null">
+                and sellMoney > #{startMoney}
+            </if>
+            <if test="endMoney != null">
+                and sellMoney &lt;= #{endMoney}
+            </if>
+            <if test="state != null">
+                and isrent = #{state}
+            </if>
+        </where>
+        <if test="currentPage != null">
+            <if test="pageSize != null">
+                limit #{currentPage},#{pageSize}
+            </if>
+        </if>
+    </select>
+</mapper>

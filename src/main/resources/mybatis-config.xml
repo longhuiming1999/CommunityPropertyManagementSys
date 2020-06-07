@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!--
+    该配置文件中包含一个configuration节点
+        里面有配置信息 分别是环境和映射
+        　其中环境里有datasource，里面有我们熟悉的连接数据库的四个字符串
+-->
+<configuration>
+    <!--
+        给当前mybatis项目添加日志功能，该STDOUT_LOGGING值的好处是不用添加第三方jar包就可以有日志的输出
+    -->
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <!-- 配置映射器位置 如果不在mybatis本身配置里面配置，可以选择在全局配置中配置 -->
+<!--        <mappers>-->
+<!--            <mapper resource="com/qfedu/ssm/dao/ProductMapper.xml"/>-->
+<!--        </mappers>-->
+
+</configuration>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myuni.wyglsys.dao.IRepairDao">
+
+    <sql id="selectAll">
+       select id,resid,resname,phone,type,content,repdate,state from tb_repair
+    </sql>
+    <select id="findRepairByIndex" resultType="com.myuni.wyglsys.entity.Repair">
+        <include refid="selectAll"/>
+        <where>
+            <if test="name != null">
+                resname like '%${name}%'
+            </if>
+            <if test="phone != null">
+                and phone like '%${phone}%'
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="content != null">
+                and content like '%${content}%'
+            </if>
+            <if test="startDate != null">
+                and repdate >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                and repdate &lt;= #{endDate}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+        </where>
+        <if test="currentPage != null &amp;&amp; pageSize != null">
+            limit #{currentPage},#{pageSize}
+        </if>
+    </select>
+</mapper>
