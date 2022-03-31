@@ -11,7 +11,7 @@
 
     <!--依赖管理-->
     <properties>
-        <spring-version>4.3.6.RELEASE</spring-version>
+        <spring-version>5.3.18</spring-version>
     </properties>
 
     <!--添加依赖-->
